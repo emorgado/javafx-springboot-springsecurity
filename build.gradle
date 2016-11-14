@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+
+def description = 'JavaFX Application with spring boot and spring security'
+def vendor='Velumsoft'
+def builNumber = System.getenv("BUILD_NUMBER") ?: '0-SNAPSHOT'
+version = '1.0.'+builNumber
+
+
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+mainClassName = 'br.com.velumsoft.JavafxSpringApp'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+    
+    maven {
+    	url "http://www.iadtec.com/nexus/content/repositories/thirdparty/"
+    }
+}
+
+dependencies {
+		
+    compile 'org.slf4j:slf4j-api'    
+    compile 'org.slf4j:jcl-over-slf4j'
+    
+    // https://bintray.com/jerady/maven/FontAwesomeFX/
+    // http://www.jensd.de/wordpress/?p=2476
+	compile 'de.jensd:fontawesomefx-commons:8.12'
+	compile 'de.jensd:fontawesomefx-controls:8.12'
+	compile 'de.jensd:fontawesomefx-fontawesome:4.6.3'
+	
+	compile 'br.com.rfcontrol:middware-rfid:1.0.1'
+	
+	compile('org.springframework.boot:spring-boot-devtools')
+	compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-security")
+    //compile 'com.fasterxml.jackson.core:jackson-databind'
+	
+	compile 'de.roskenet:springboot-javafx-support:1.2.0'
+	
+    testCompile 'junit:junit:4.12'
+    
+}
+
+
+def manifestClasspath = configurations.compile.collect { it.getName() }.join(' ')
+jar.doFirst {
+    manifest {
+        attributes "Specification-Title"  : name,
+                "Specification-Version": version,
+                "Specification-Vendor" : vendor,
+                "Implementation-Title" : name,
+                "Implementation-Version" : version,
+                "Implementation-Vendor": vendor,
+        		'Created-By': 'emerson.morgado@gmail.com',
+        		'Description': description, 
+        	    'Class-Path': manifestClasspath        	       
+    }
+}
+

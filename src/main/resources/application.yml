@@ -1,0 +1,12 @@
+
+
+logging:
+    level:
+        br.com.velumsoft: DEBUG
+
+spring:
+    output:
+        ansi:
+            enabled: ALWAYS
+
+            
